@@ -1,5 +1,6 @@
 package com.example.challenge2.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ScrollCaptureCallback
 import android.view.View
@@ -9,14 +10,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.challenge2.R
 import com.example.challenge2.models.ItemMakanan
+import com.example.challenge2.models.RecyclerViewLayoutOption
 
-class FoodAdapter(private val foods: List<ItemMakanan>):RecyclerView.Adapter<FoodAdapter.FoodHolder>() {
+class FoodAdapter(private var foods: List<ItemMakanan>, lm:RecyclerViewLayoutOption ):RecyclerView.Adapter<FoodAdapter.FoodHolder>() {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
-
+    var currentLayoutManager:RecyclerViewLayoutOption = lm
     interface OnItemClickCallback {
         fun onItemClicked(data:ItemMakanan)
 
+    }
+    fun changeLayoutManager(typeMenu:RecyclerViewLayoutOption) {
+        currentLayoutManager=typeMenu
+        notifyDataSetChanged()
+        Log.w("Layout","Layout berubah ke ${typeMenu.name}")
     }
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback){
@@ -30,13 +37,30 @@ class FoodAdapter(private val foods: List<ItemMakanan>):RecyclerView.Adapter<Foo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodHolder {
-        return FoodHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_makanan,parent,false))
+        val layoutItemMakanan = when(currentLayoutManager){
+            RecyclerViewLayoutOption.GRID_LAYOUT->R.layout.item_makanan
+            RecyclerViewLayoutOption.LINEAR_LAYOUT-> R.layout.item_makanan_linear
+        }
+        return FoodHolder(LayoutInflater.from(parent.context).inflate(layoutItemMakanan,parent,false))
     }
 
     override fun onBindViewHolder(holder: FoodHolder, position: Int) {
+        //val item = foods[position]
         holder.image.setImageResource(foods[position].image)
         holder.tvName.text=foods[position].name
-        holder.tvHarga.text=foods[position].harga.toString()
+        holder.tvHarga.text="Rp. ${foods[position].harga}"
+//        when(currentLayoutManager){
+//            RecyclerViewLayoutOption.GRID_LAYOUT -> {
+//                holder.image.setImageResource(foods[position].image)
+//                holder.tvName.text=foods[position].name
+//                holder.tvHarga.text="Rp. ${foods[position].harga}"
+//            }
+//            RecyclerViewLayoutOption.LINEAR_LAYOUT -> {
+//                holder.image.setImageResource(foods[position].image)
+//                holder.tvName.text=foods[position].name
+//                holder.tvHarga.text="Rp. ${foods[position].harga}"
+//            }
+//        }
     }
 
     override fun getItemCount(): Int {
