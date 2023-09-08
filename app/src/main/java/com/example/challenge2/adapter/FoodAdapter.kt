@@ -49,18 +49,9 @@ class FoodAdapter(private var foods: List<ItemMakanan>, lm:RecyclerViewLayoutOpt
         holder.image.setImageResource(foods[position].image)
         holder.tvName.text=foods[position].name
         holder.tvHarga.text="Rp. ${foods[position].harga}"
-//        when(currentLayoutManager){
-//            RecyclerViewLayoutOption.GRID_LAYOUT -> {
-//                holder.image.setImageResource(foods[position].image)
-//                holder.tvName.text=foods[position].name
-//                holder.tvHarga.text="Rp. ${foods[position].harga}"
-//            }
-//            RecyclerViewLayoutOption.LINEAR_LAYOUT -> {
-//                holder.image.setImageResource(foods[position].image)
-//                holder.tvName.text=foods[position].name
-//                holder.tvHarga.text="Rp. ${foods[position].harga}"
-//            }
-//        }
+        holder.itemView.setOnClickListener {
+            onItemClickCallback.onItemClicked(foods[holder.adapterPosition])
+        }
     }
 
     override fun getItemCount(): Int {
